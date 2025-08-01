@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA Assistant - StudyHub</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="theme-toggle">
+    <button id="theme-switch" aria-label="Changer de thème">
+      <i class="fas fa-sun"></i>
+    </button>
+  </div>
+
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <a href="../index.html">
+          <img src="../assets/logo.png" id="logo" alt="StudyHub Logo">
+        </a>
+        <h1>StudyHub</h1>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="flashcards.html" class="nav-link">
+            <i class="fas fa-layer-group"></i>
+            <span>Flashcards</span>
+          </a></li>
+          <li><a href="qcm.html" class="nav-link">
+            <i class="fas fa-question-circle"></i>
+            <span>QCM</span>
+          </a></li>
+          <li><a href="resumes.html" class="nav-link">
+            <i class="fas fa-file-alt"></i>
+            <span>Résumés</span>
+          </a></li>
+          <li><a href="import.html" class="nav-link">
+            <i class="fas fa-upload"></i>
+            <span>Importer</span>
+          </a></li>
+          <li><a href="ai-chat.html" class="nav-link active">
+            <i class="fas fa-robot"></i>
+            <span>IA Assistant</span>
+          </a></li>
+        </ul>
+      </nav>
+      <div class="user-section">
+        <div id="user-info" class="user-info hidden">
+          <span id="user-name"></span>
+          <button id="logout-btn" class="btn btn-secondary">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+        <button id="login-btn" class="btn btn-primary">
+          <i class="fas fa-sign-in-alt"></i> Connexion
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">IA Assistant</h1>
+      <p class="page-subtitle">Posez vos questions sur vos cours et obtenez des explications personnalisées</p>
+    </div>
+
+    <div class="chat-container">
+      <!-- Sélection de matière -->
+      <div class="subject-selector">
+        <div class="form-group">
+          <label for="chat-subject" class="form-label">Sélectionner une matière</label>
+          <select id="chat-subject" class="form-select">
+            <option value="">Choisir une matière...</option>
+          </select>
+        </div>
+        <div class="subject-info hidden" id="subject-info">
+          <div class="info-card">
+            <h4>Informations sur la matière</h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Documents: <strong id="doc-count">0</strong></span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-question-circle"></i>
+                <span>QCM: <strong id="qcm-count">0</strong></span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-layer-group"></i>
+                <span>Flashcards: <strong id="flashcard-count">0</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zone de chat -->
+      <div class="chat-area">
+        <div class="chat-messages" id="chat-messages">
+          <div class="welcome-message">
+            <div class="ai-avatar">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-content">
+              <h4>Bonjour ! Je suis votre assistant IA StudyHub</h4>
+              <p>Je peux vous aider à comprendre vos cours, répondre à vos questions et vous expliquer les concepts difficiles. Sélectionnez une matière pour commencer !</p>
+              <div class="suggested-questions">
+                <h5>Questions suggérées :</h5>
+                <div class="question-chips">
+                  <button class="question-chip" data-question="Peux-tu m'expliquer les concepts principaux de ce cours ?">
+                    Concepts principaux
+                  </button>
+                  <button class="question-chip" data-question="Quelles sont les formules importantes à retenir ?">
+                    Formules importantes
+                  </button>
+                  <button class="question-chip" data-question="Peux-tu me donner des exemples pratiques ?">
+                    Exemples pratiques
+                  </button>
+                  <button class="question-chip" data-question="Quels sont les points difficiles de ce cours ?">
+                    Points difficiles
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone de saisie -->
+        <div class="chat-input-area">
+          <div class="chat-input-container">
+            <textarea 
+              id="chat-input" 
+              placeholder="Posez votre question sur le cours..."
+              rows="1"
+            ></textarea>
+            <button id="send-message" class="send-btn" disabled>
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <div class="chat-actions">
+            <button class="action-btn" id="clear-chat" title="Effacer la conversation">
+              <i class="fas fa-trash"></i>
+            </button>
+            <button class="action-btn" id="export-chat" title="Exporter la conversation">
+              <i class="fas fa-download"></i>
+            </button>
+            <button class="action-btn" id="voice-input" title="Saisie vocale">
+              <i class="fas fa-microphone"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panneau latéral avec contexte -->
+      <div class="chat-sidebar">
+        <div class="sidebar-header">
+          <h4>Contexte du cours</h4>
+        </div>
+        <div class="context-content" id="context-content">
+          <div class="empty-context">
+            <i class="fas fa-info-circle"></i>
+            <p>Sélectionnez une matière pour voir le contexte</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 StudyHub - Plateforme de révision intelligente</p>
+  </footer>
+
+  <script src="../scripts/main.js"></script>
+  <script src="../scripts/auth.js"></script>
+  <script src="../scripts/notification-manager.js"></script>
+  <script src="../scripts/ai-service.js"></script>
+  <script src="../scripts/ai-chat.js"></script>
+</body>
+</html>

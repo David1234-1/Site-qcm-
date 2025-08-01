@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Règles pour les utilisateurs
+    match /users/{userId} {
+      // L'utilisateur peut lire et écrire ses propres données
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Empêcher la suppression de son propre document
+      allow delete: if false;
+    }
+    
+    // Règles pour les données publiques (si nécessaire)
+    match /public/{document=**} {
+      // Lecture publique, écriture seulement pour les utilisateurs authentifiés
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Règles par défaut - refuser tout accès
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

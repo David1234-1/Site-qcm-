@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QCM - StudyHub</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="theme-toggle">
+    <button id="theme-switch" aria-label="Changer de thème">
+      <i class="fas fa-sun"></i>
+    </button>
+  </div>
+
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <a href="../index.html">
+          <img src="../assets/logo.png" id="logo" alt="StudyHub Logo">
+        </a>
+        <h1>StudyHub</h1>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="flashcards.html" class="nav-link">
+            <i class="fas fa-layer-group"></i>
+            <span>Flashcards</span>
+          </a></li>
+          <li><a href="qcm.html" class="nav-link active">
+            <i class="fas fa-question-circle"></i>
+            <span>QCM</span>
+          </a></li>
+          <li><a href="resumes.html" class="nav-link">
+            <i class="fas fa-file-alt"></i>
+            <span>Résumés</span>
+          </a></li>
+          <li><a href="import.html" class="nav-link">
+            <i class="fas fa-upload"></i>
+            <span>Importer</span>
+          </a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">QCM Interactifs</h1>
+      <p class="page-subtitle">Créez et passez des quiz personnalisés avec évaluation en temps réel</p>
+    </div>
+
+    <!-- Onglets -->
+    <div class="tabs-container">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="create">
+          <i class="fas fa-plus"></i>
+          Créer un QCM
+        </button>
+        <button class="tab-btn" data-tab="practice">
+          <i class="fas fa-play"></i>
+          Passer un QCM
+        </button>
+        <button class="tab-btn" data-tab="stats">
+          <i class="fas fa-chart-bar"></i>
+          Statistiques
+        </button>
+      </div>
+
+      <!-- Onglet Créer -->
+      <div class="tab-content active" id="create-tab">
+        <div class="card">
+          <h3><i class="fas fa-edit"></i> Créer un nouveau QCM</h3>
+          
+          <form id="qcm-form">
+            <div class="form-group">
+              <label for="subject-select" class="form-label">Matière</label>
+              <select id="subject-select" class="form-select" required>
+                <option value="">Sélectionner une matière</option>
+              </select>
+              <button type="button" class="btn btn-secondary mt-1" onclick="createNewSubject()">
+                <i class="fas fa-plus"></i> Nouvelle matière
+              </button>
+            </div>
+
+            <div class="form-group">
+              <label for="qcm-title" class="form-label">Titre du QCM</label>
+              <input type="text" id="qcm-title" class="form-input" placeholder="Ex: Quiz sur les fonctions" required>
+            </div>
+
+            <div class="form-group">
+              <label for="qcm-description" class="form-label">Description (optionnel)</label>
+              <textarea id="qcm-description" class="form-textarea" placeholder="Description du QCM..."></textarea>
+            </div>
+
+            <div id="questions-container">
+              <!-- Les questions seront ajoutées ici dynamiquement -->
+            </div>
+
+            <button type="button" class="btn btn-secondary" onclick="addQuestion()">
+              <i class="fas fa-plus"></i> Ajouter une question
+            </button>
+
+            <div class="form-actions mt-3">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Sauvegarder le QCM
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                <i class="fas fa-trash"></i> Effacer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Onglet Passer -->
+      <div class="tab-content" id="practice-tab">
+        <div class="card">
+          <h3><i class="fas fa-play"></i> Sélectionner un QCM à passer</h3>
+          
+          <div class="form-group">
+            <label for="practice-subject" class="form-label">Matière</label>
+            <select id="practice-subject" class="form-select" onchange="loadQCMsForSubject()">
+              <option value="">Sélectionner une matière</option>
+            </select>
+          </div>
+
+          <div id="qcm-list" class="grid-3">
+            <!-- Les QCM disponibles seront affichés ici -->
+          </div>
+        </div>
+
+        <div id="qcm-practice-container" class="hidden">
+          <div class="card">
+            <div class="qcm-header">
+              <h3 id="current-qcm-title"></h3>
+              <div class="qcm-progress">
+                <span id="question-counter">Question 1/5</span>
+                <div class="progress-bar">
+                  <div class="progress-bar-fill" id="qcm-progress-fill"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="question-container">
+              <!-- La question actuelle sera affichée ici -->
+            </div>
+
+            <div class="qcm-actions">
+              <button class="btn btn-secondary" onclick="previousQuestion()" id="prev-btn">
+                <i class="fas fa-chevron-left"></i> Précédent
+              </button>
+              <button class="btn btn-primary" onclick="nextQuestion()" id="next-btn">
+                Suivant <i class="fas fa-chevron-right"></i>
+              </button>
+              <button class="btn btn-success hidden" onclick="finishQCM()" id="finish-btn">
+                <i class="fas fa-check"></i> Terminer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet Statistiques -->
+      <div class="tab-content" id="stats-tab">
+        <div class="stats-overview">
+          <div class="grid-3">
+            <div class="stat-card">
+              <i class="fas fa-trophy"></i>
+              <div class="stat-info">
+                <span class="stat-number" id="total-attempts">0</span>
+                <span class="stat-label">Tentatives totales</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-percentage"></i>
+              <div class="stat-info">
+                <span class="stat-number" id="avg-score-qcm">0%</span>
+                <span class="stat-label">Score moyen</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-clock"></i>
+              <div class="stat-info">
+                <span class="stat-number" id="total-time">0h</span>
+                <span class="stat-label">Temps total</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-details">
+          <h3>Statistiques par matière</h3>
+          <div id="subject-stats" class="grid-2">
+            <!-- Les statistiques par matière seront affichées ici -->
+          </div>
+        </div>
+
+        <div class="recent-results">
+          <h3>Résultats récents</h3>
+          <div id="recent-results-list">
+            <!-- Les résultats récents seront affichés ici -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal de résultats -->
+  <div id="results-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Résultats du QCM</h3>
+        <button class="modal-close" onclick="closeResultsModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="results-summary">
+          <div class="score-display">
+            <div class="score-circle">
+              <span id="final-score">0%</span>
+            </div>
+            <p id="score-message">Excellent travail !</p>
+          </div>
+          
+          <div class="results-details">
+            <div class="result-item">
+              <span class="result-label">Questions correctes:</span>
+              <span id="correct-answers">0/0</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Temps:</span>
+              <span id="completion-time">0:00</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Date:</span>
+              <span id="completion-date">Aujourd'hui</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-review">
+          <h4>Révision des questions</h4>
+          <div id="question-review-list">
+            <!-- Les questions avec les réponses seront affichées ici -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="retryQCM()">
+          <i class="fas fa-redo"></i> Recommencer
+        </button>
+        <button class="btn btn-secondary" onclick="closeResultsModal()">
+          <i class="fas fa-times"></i> Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../scripts/main.js"></script>
+  <script src="../scripts/auth.js"></script>
+  <script src="../scripts/notification-manager.js"></script>
+  <script src="../scripts/ai-service.js"></script>
+  <script src="../scripts/qcm.js"></script>
+</body>
+</html>

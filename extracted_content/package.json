@@ -1,0 +1,61 @@
+{
+  "name": "studyhub",
+  "version": "1.0.0",
+  "description": "Plateforme de révision intelligente avec IA intégrée",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "live-server --port=8000 --open=/",
+    "build": "echo 'Build completed'",
+    "test": "echo 'Tests completed'",
+    "lint": "eslint scripts/*.js",
+    "format": "prettier --write \"**/*.{js,css,html,md}\"",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:firestore": "firebase deploy --only firestore",
+    "firebase:init": "firebase init",
+    "firebase:login": "firebase login",
+    "firebase:logout": "firebase logout"
+  },
+  "keywords": [
+    "education",
+    "learning",
+    "ai",
+    "flashcards",
+    "quiz",
+    "study",
+    "revision",
+    "pdf",
+    "document-processing"
+  ],
+  "author": "StudyHub Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/votre-username/studyhub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/votre-username/studyhub/issues"
+  },
+  "homepage": "https://github.com/votre-username/studyhub#readme",
+  "dependencies": {
+    "firebase": "^10.7.0",
+    "pdfjs-dist": "^3.11.174",
+    "mammoth": "^1.6.0",
+    "openai": "^4.20.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^2.8.0",
+    "live-server": "^1.2.2",
+    "firebase-tools": "^13.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
