@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistiques - StudyHub</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="theme-toggle">
+    <button id="theme-switch" aria-label="Changer de thème">
+      <i class="fas fa-sun"></i>
+    </button>
+  </div>
+
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <a href="../index.html">
+          <img src="../assets/logo.png" id="logo" alt="StudyHub Logo">
+        </a>
+        <h1>StudyHub</h1>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="flashcards.html" class="nav-link">
+            <i class="fas fa-layer-group"></i>
+            <span>Flashcards</span>
+          </a></li>
+          <li><a href="qcm.html" class="nav-link">
+            <i class="fas fa-question-circle"></i>
+            <span>QCM</span>
+          </a></li>
+          <li><a href="resumes.html" class="nav-link">
+            <i class="fas fa-file-alt"></i>
+            <span>Résumés</span>
+          </a></li>
+          <li><a href="import.html" class="nav-link">
+            <i class="fas fa-upload"></i>
+            <span>Importer</span>
+          </a></li>
+          <li><a href="ai-chat.html" class="nav-link">
+            <i class="fas fa-robot"></i>
+            <span>IA Assistant</span>
+          </a></li>
+        </ul>
+      </nav>
+      <div class="user-section">
+        <div id="user-info" class="user-info hidden">
+          <span id="user-name"></span>
+          <button id="logout-btn" class="btn btn-secondary">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+        <button id="login-btn" class="btn btn-primary">
+          <i class="fas fa-sign-in-alt"></i> Connexion
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">Mes Statistiques</h1>
+      <p class="page-subtitle">Suivez vos progrès et vos performances par matière</p>
+    </div>
+
+    <!-- Vue d'ensemble -->
+    <section class="stats-overview">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="total-subjects">0</h3>
+            <p>Matières étudiées</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-question-circle"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="total-questions">0</h3>
+            <p>Questions répondues</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="avg-score">0%</h3>
+            <p>Score moyen</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="study-time">0h</h3>
+            <p>Temps d'étude</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filtres et sélection -->
+    <section class="stats-filters">
+      <div class="filters-container">
+        <div class="filter-group">
+          <label for="subject-filter" class="form-label">Filtrer par matière</label>
+          <select id="subject-filter" class="form-select">
+            <option value="">Toutes les matières</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="period-filter" class="form-label">Période</label>
+          <select id="period-filter" class="form-select">
+            <option value="all">Tout le temps</option>
+            <option value="week">Cette semaine</option>
+            <option value="month">Ce mois</option>
+            <option value="quarter">Ce trimestre</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="type-filter" class="form-label">Type d'activité</label>
+          <select id="type-filter" class="form-select">
+            <option value="all">Toutes les activités</option>
+            <option value="qcm">QCM uniquement</option>
+            <option value="flashcards">Flashcards uniquement</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Graphiques et visualisations -->
+    <section class="stats-charts">
+      <div class="charts-grid">
+        <!-- Progression par matière -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Progression par matière</h3>
+            <div class="chart-actions">
+              <button class="chart-btn" data-chart="progress">
+                <i class="fas fa-chart-bar"></i>
+              </button>
+              <button class="chart-btn" data-chart="radar">
+                <i class="fas fa-chart-pie"></i>
+              </button>
+            </div>
+          </div>
+          <div class="chart-container" id="progress-chart">
+            <div class="chart-placeholder">
+              <i class="fas fa-chart-bar"></i>
+              <p>Sélectionnez une matière pour voir les statistiques</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Évolution des scores -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Évolution des scores</h3>
+            <div class="chart-actions">
+              <button class="chart-btn active" data-chart="line">
+                <i class="fas fa-chart-line"></i>
+              </button>
+              <button class="chart-btn" data-chart="area">
+                <i class="fas fa-chart-area"></i>
+              </button>
+            </div>
+          </div>
+          <div class="chart-container" id="scores-chart">
+            <div class="chart-placeholder">
+              <i class="fas fa-chart-line"></i>
+              <p>Vos scores au fil du temps</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Détails par matière -->
+    <section class="subject-stats">
+      <h3>Détails par matière</h3>
+      <div class="subjects-stats-grid" id="subjects-stats">
+        <!-- Les statistiques par matière seront générées ici -->
+      </div>
+    </section>
+
+    <!-- Activité récente -->
+    <section class="recent-activity">
+      <h3>Activité récente</h3>
+      <div class="activity-timeline" id="activity-timeline">
+        <!-- L'activité récente sera générée ici -->
+      </div>
+    </section>
+
+    <!-- Objectifs et recommandations -->
+    <section class="goals-recommendations">
+      <div class="goals-recommendations-grid">
+        <div class="goals-card">
+          <h3>Mes objectifs</h3>
+          <div class="goals-list" id="goals-list">
+            <div class="goal-item">
+              <div class="goal-info">
+                <h4>Améliorer en Mathématiques</h4>
+                <p>Atteindre 80% de réussite</p>
+              </div>
+              <div class="goal-progress">
+                <div class="progress-bar">
+                  <div class="progress-bar-fill" style="width: 65%"></div>
+                </div>
+                <span>65%</span>
+              </div>
+            </div>
+            <div class="goal-item">
+              <div class="goal-info">
+                <h4>Réviser 50 flashcards</h4>
+                <p>Cette semaine</p>
+              </div>
+              <div class="goal-progress">
+                <div class="progress-bar">
+                  <div class="progress-bar-fill" style="width: 40%"></div>
+                </div>
+                <span>20/50</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary mt-2">
+            <i class="fas fa-plus"></i> Nouvel objectif
+          </button>
+        </div>
+
+        <div class="recommendations-card">
+          <h3>Recommandations</h3>
+          <div class="recommendations-list" id="recommendations-list">
+            <div class="recommendation-item">
+              <i class="fas fa-lightbulb"></i>
+              <div class="recommendation-content">
+                <h4>Réviser les QCM de Physique</h4>
+                <p>Votre score a baissé de 15% cette semaine</p>
+              </div>
+            </div>
+            <div class="recommendation-item">
+              <i class="fas fa-clock"></i>
+              <div class="recommendation-content">
+                <h4>Étudier plus régulièrement</h4>
+                <p>Essayez de réviser 30 minutes par jour</p>
+              </div>
+            </div>
+            <div class="recommendation-item">
+              <i class="fas fa-star"></i>
+              <div class="recommendation-content">
+                <h4>Excellent travail en Histoire</h4>
+                <p>Continuez comme ça !</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Export et partage -->
+    <section class="export-section">
+      <div class="export-actions">
+        <button class="btn btn-secondary" id="export-pdf">
+          <i class="fas fa-file-pdf"></i> Exporter en PDF
+        </button>
+        <button class="btn btn-secondary" id="export-csv">
+          <i class="fas fa-file-csv"></i> Exporter en CSV
+        </button>
+        <button class="btn btn-primary" id="share-stats">
+          <i class="fas fa-share"></i> Partager mes progrès
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 StudyHub - Plateforme de révision intelligente</p>
+  </footer>
+
+  <script src="../scripts/main.js"></script>
+  <script src="../scripts/auth.js"></script>
+  <script src="../scripts/notification-manager.js"></script>
+  <script src="../scripts/ai-service.js"></script>
+  <script src="../scripts/statistics.js"></script>
+</body>
+</html>

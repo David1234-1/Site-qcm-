@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards - StudyHub</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="theme-toggle">
+    <button id="theme-switch" aria-label="Changer de thème">
+      <i class="fas fa-sun"></i>
+    </button>
+  </div>
+
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <a href="../index.html">
+          <img src="../assets/logo.png" id="logo" alt="StudyHub Logo">
+        </a>
+        <h1>StudyHub</h1>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="flashcards.html" class="nav-link active">
+            <i class="fas fa-layer-group"></i>
+            <span>Flashcards</span>
+          </a></li>
+          <li><a href="qcm.html" class="nav-link">
+            <i class="fas fa-question-circle"></i>
+            <span>QCM</span>
+          </a></li>
+          <li><a href="resumes.html" class="nav-link">
+            <i class="fas fa-file-alt"></i>
+            <span>Résumés</span>
+          </a></li>
+          <li><a href="import.html" class="nav-link">
+            <i class="fas fa-upload"></i>
+            <span>Importer</span>
+          </a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">Flashcards Interactives</h1>
+      <p class="page-subtitle">Créez et révisez avec des flashcards animées et progressives</p>
+    </div>
+
+    <!-- Onglets -->
+    <div class="tabs-container">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="subjects">
+          <i class="fas fa-book"></i>
+          Matières
+        </button>
+        <button class="tab-btn" data-tab="create">
+          <i class="fas fa-plus"></i>
+          Créer des flashcards
+        </button>
+        <button class="tab-btn" data-tab="stats">
+          <i class="fas fa-chart-bar"></i>
+          Statistiques
+        </button>
+      </div>
+
+      <!-- Onglet Matières -->
+      <div class="tab-content active" id="subjects-tab">
+        <div class="card">
+          <div class="subjects-header">
+            <h3><i class="fas fa-book"></i> Vos matières</h3>
+            <button class="btn btn-primary" onclick="flashcardManager.createSubject()">
+              <i class="fas fa-plus"></i> Nouvelle matière
+            </button>
+          </div>
+          
+          <div id="subjects-grid" class="subjects-grid">
+            <!-- Les matières seront affichées ici -->
+          </div>
+        </div>
+
+        <div id="flashcards-container" class="flashcards-section hidden">
+          <div class="card">
+            <div class="flashcards-header">
+              <h3 id="current-subject-title"></h3>
+              <div class="flashcards-controls">
+                <button class="btn btn-secondary" onclick="flashcardManager.previousCard()" id="prev-card-btn">
+                  <i class="fas fa-chevron-left"></i> Précédent
+                </button>
+                <span id="card-counter">1/5</span>
+                <button class="btn btn-secondary" onclick="flashcardManager.nextCard()" id="next-card-btn">
+                  Suivant <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="progress-section">
+              <div class="progress-info">
+                <span>Progression</span>
+                <span id="progress-percentage">20%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-bar-fill" id="flashcard-progress"></div>
+              </div>
+            </div>
+
+            <div id="flashcard-display" class="flashcard-display">
+              <!-- Les flashcards seront affichées ici -->
+            </div>
+
+            <div class="flashcard-actions">
+              <button class="btn btn-error" onclick="flashcardManager.markAsIncorrect()">
+                <i class="fas fa-times"></i> Incorrect
+              </button>
+              <button class="btn btn-success" onclick="flashcardManager.markAsCorrect()">
+                <i class="fas fa-check"></i> Correct
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglet Créer -->
+      <div class="tab-content" id="create-tab">
+        <div class="card">
+          <h3><i class="fas fa-edit"></i> Créer de nouvelles flashcards</h3>
+          
+          <form id="flashcard-form">
+            <div class="form-group">
+              <label for="flashcard-subject" class="form-label">Matière</label>
+              <select id="flashcard-subject" class="form-select" required>
+                <option value="">Sélectionner une matière</option>
+              </select>
+            </div>
+
+            <div id="flashcards-creation-container">
+              <!-- Les flashcards en cours de création seront affichées ici -->
+            </div>
+
+            <button type="button" class="btn btn-secondary" onclick="flashcardManager.addFlashcardField()">
+              <i class="fas fa-plus"></i> Ajouter une flashcard
+            </button>
+
+            <div class="form-actions mt-3">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Sauvegarder
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="flashcardManager.clearFlashcardForm()">
+                <i class="fas fa-trash"></i> Effacer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Onglet Statistiques -->
+      <div class="tab-content" id="stats-tab">
+        <div class="stats-overview">
+          <div class="grid-3">
+            <div class="stat-card">
+              <i class="fas fa-layer-group"></i>
+              <div class="stat-info">
+                <span class="stat-number" id="total-flashcards">0</span>
+                <span class="stat-label">Flashcards totales</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-percentage"></i>
+              <div class="stat-info">
+                <span class="stat-number" id="flashcard-accuracy">0%</span>
+                <span class="stat-label">Précision moyenne</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-clock"></i>
+              <div class="stat-info">
+                <span class="stat-number" id="study-time">0h</span>
+                <span class="stat-label">Temps d'étude</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-details">
+          <h3>Statistiques par matière</h3>
+          <div id="subject-stats-flashcards" class="grid-2">
+            <!-- Les statistiques par matière seront affichées ici -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../scripts/main.js"></script>
+  <script src="../scripts/auth.js"></script>
+  <script src="../scripts/notification-manager.js"></script>
+  <script src="../scripts/ai-service.js"></script>
+  <script src="../scripts/flashcards.js"></script>
+</body>
+</html>

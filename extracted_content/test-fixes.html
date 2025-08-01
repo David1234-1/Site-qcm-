@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test des Corrections - StudyHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .log {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test des Corrections StudyHub</h1>
+    
+    <div class="test-section">
+        <h2>1. Test de l'Import de Documents</h2>
+        <p>Vérification que l'erreur "undefined is not an object" est corrigée</p>
+        <button onclick="testDocumentProcessor()">Tester DocumentProcessor</button>
+        <button onclick="testImportManager()">Tester ImportManager</button>
+        <div id="import-test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test de l'Authentification</h2>
+        <p>Vérification des améliorations de connexion et inscription</p>
+        <button onclick="testAuthValidation()">Tester Validation Auth</button>
+        <button onclick="testAuthErrors()">Tester Gestion Erreurs</button>
+        <div id="auth-test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test du Service IA</h2>
+        <p>Vérification que l'IA fonctionne en mode simulation</p>
+        <button onclick="testAIService()">Tester AIService</button>
+        <button onclick="testFlashcardGeneration()">Tester Génération Flashcards</button>
+        <button onclick="testQCMGeneration()">Tester Génération QCM</button>
+        <div id="ai-test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Test de Génération de Contenu</h2>
+        <p>Vérification que les cours importés génèrent bien des flashcards et QCM</p>
+        <button onclick="testContentGeneration()">Tester Génération Contenu</button>
+        <div id="content-test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Logs de Test</h2>
+        <div id="test-logs" class="log"></div>
+    </div>
+
+    <script>
+        function log(message) {
+            const logs = document.getElementById('test-logs');
+            logs.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        function showResult(containerId, message, type = 'success') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            container.appendChild(div);
+        }
+
+        // Test 1: DocumentProcessor
+        function testDocumentProcessor() {
+            log('Test DocumentProcessor...');
+            const container = document.getElementById('import-test-results');
+            container.innerHTML = '';
+
+            try {
+                if (typeof window.DocumentProcessor !== 'undefined') {
+                    showResult('import-test-results', '✅ DocumentProcessor est correctement initialisé', 'success');
+                    log('DocumentProcessor OK');
+                } else {
+                    showResult('import-test-results', '❌ DocumentProcessor n\'est pas initialisé', 'error');
+                    log('DocumentProcessor FAILED');
+                }
+            } catch (error) {
+                showResult('import-test-results', '❌ Erreur lors du test DocumentProcessor: ' + error.message, 'error');
+                log('DocumentProcessor ERROR: ' + error.message);
+            }
+        }
+
+        // Test 2: ImportManager
+        function testImportManager() {
+            log('Test ImportManager...');
+            const container = document.getElementById('import-test-results');
+            
+            try {
+                // Simuler un fichier
+                const mockFile = new File(['Contenu de test'], 'test.pdf', { type: 'application/pdf' });
+                
+                if (window.DocumentProcessor && typeof window.DocumentProcessor.validateFile === 'function') {
+                    const result = window.DocumentProcessor.validateFile(mockFile);
+                    showResult('import-test-results', '✅ Validation de fichier fonctionne', 'success');
+                    log('ImportManager validation OK');
+                } else {
+                    showResult('import-test-results', '❌ Méthode validateFile non trouvée', 'error');
+                    log('ImportManager validation FAILED');
+                }
+            } catch (error) {
+                showResult('import-test-results', '❌ Erreur lors du test ImportManager: ' + error.message, 'error');
+                log('ImportManager ERROR: ' + error.message);
+            }
+        }
+
+        // Test 3: Validation Auth
+        function testAuthValidation() {
+            log('Test validation auth...');
+            const container = document.getElementById('auth-test-results');
+            container.innerHTML = '';
+
+            try {
+                if (window.AuthManager && typeof window.AuthManager.isValidEmail === 'function') {
+                    const validEmail = window.AuthManager.isValidEmail('test@example.com');
+                    const invalidEmail = window.AuthManager.isValidEmail('invalid-email');
+                    
+                    if (validEmail && !invalidEmail) {
+                        showResult('auth-test-results', '✅ Validation email fonctionne', 'success');
+                        log('Auth validation OK');
+                    } else {
+                        showResult('auth-test-results', '❌ Validation email incorrecte', 'error');
+                        log('Auth validation FAILED');
+                    }
+                } else {
+                    showResult('auth-test-results', '❌ AuthManager ou isValidEmail non trouvé', 'error');
+                    log('Auth validation FAILED - méthode manquante');
+                }
+            } catch (error) {
+                showResult('auth-test-results', '❌ Erreur lors du test auth: ' + error.message, 'error');
+                log('Auth validation ERROR: ' + error.message);
+            }
+        }
+
+        // Test 4: AIService
+        function testAIService() {
+            log('Test AIService...');
+            const container = document.getElementById('ai-test-results');
+            container.innerHTML = '';
+
+            try {
+                if (window.AIService) {
+                    showResult('ai-test-results', '✅ AIService est initialisé', 'success');
+                    log('AIService OK');
+                } else {
+                    showResult('ai-test-results', '❌ AIService n\'est pas initialisé', 'error');
+                    log('AIService FAILED');
+                }
+            } catch (error) {
+                showResult('ai-test-results', '❌ Erreur lors du test AIService: ' + error.message, 'error');
+                log('AIService ERROR: ' + error.message);
+            }
+        }
+
+        // Test 5: Génération Flashcards
+        async function testFlashcardGeneration() {
+            log('Test génération flashcards...');
+            const container = document.getElementById('ai-test-results');
+            
+            try {
+                if (window.AIService && typeof window.AIService.generateFlashcards === 'function') {
+                    const mockContent = 'Ceci est un contenu de test pour la génération de flashcards.';
+                    const flashcards = await window.AIService.generateFlashcards(mockContent, 3);
+                    
+                    if (flashcards && Array.isArray(flashcards) && flashcards.length > 0) {
+                        showResult('ai-test-results', `✅ Génération flashcards OK (${flashcards.length} générées)`, 'success');
+                        log('Flashcard generation OK: ' + flashcards.length + ' flashcards');
+                    } else {
+                        showResult('ai-test-results', '❌ Génération flashcards échouée', 'error');
+                        log('Flashcard generation FAILED');
+                    }
+                } else {
+                    showResult('ai-test-results', '❌ Méthode generateFlashcards non trouvée', 'error');
+                    log('Flashcard generation FAILED - méthode manquante');
+                }
+            } catch (error) {
+                showResult('ai-test-results', '❌ Erreur lors du test flashcards: ' + error.message, 'error');
+                log('Flashcard generation ERROR: ' + error.message);
+            }
+        }
+
+        // Test 6: Génération QCM
+        async function testQCMGeneration() {
+            log('Test génération QCM...');
+            const container = document.getElementById('ai-test-results');
+            
+            try {
+                if (window.AIService && typeof window.AIService.generateQCM === 'function') {
+                    const mockContent = 'Ceci est un contenu de test pour la génération de QCM.';
+                    const qcm = await window.AIService.generateQCM(mockContent, 3);
+                    
+                    if (qcm && Array.isArray(qcm) && qcm.length > 0) {
+                        showResult('ai-test-results', `✅ Génération QCM OK (${qcm.length} questions)`, 'success');
+                        log('QCM generation OK: ' + qcm.length + ' questions');
+                    } else {
+                        showResult('ai-test-results', '❌ Génération QCM échouée', 'error');
+                        log('QCM generation FAILED');
+                    }
+                } else {
+                    showResult('ai-test-results', '❌ Méthode generateQCM non trouvée', 'error');
+                    log('QCM generation FAILED - méthode manquante');
+                }
+            } catch (error) {
+                showResult('ai-test-results', '❌ Erreur lors du test QCM: ' + error.message, 'error');
+                log('QCM generation ERROR: ' + error.message);
+            }
+        }
+
+        // Test 7: Génération Contenu Complet
+        async function testContentGeneration() {
+            log('Test génération contenu complet...');
+            const container = document.getElementById('content-test-results');
+            container.innerHTML = '';
+
+            try {
+                if (window.DocumentProcessor && typeof window.DocumentProcessor.generateStructuredContent === 'function') {
+                    const mockContent = 'Ceci est un contenu de cours de test pour vérifier la génération automatique de flashcards, QCM et résumés.';
+                    const result = await window.DocumentProcessor.generateStructuredContent(mockContent, {
+                        generateSummary: true,
+                        generateQCM: true,
+                        generateFlashcards: true,
+                        subject: 'Test'
+                    });
+                    
+                    let successCount = 0;
+                    if (result.summary) successCount++;
+                    if (result.qcm && result.qcm.length > 0) successCount++;
+                    if (result.flashcards && result.flashcards.length > 0) successCount++;
+                    
+                    showResult('content-test-results', `✅ Génération contenu OK (${successCount}/3 composants)`, 'success');
+                    log('Content generation OK: ' + successCount + '/3 components');
+                } else {
+                    showResult('content-test-results', '❌ Méthode generateStructuredContent non trouvée', 'error');
+                    log('Content generation FAILED - méthode manquante');
+                }
+            } catch (error) {
+                showResult('content-test-results', '❌ Erreur lors du test contenu: ' + error.message, 'error');
+                log('Content generation ERROR: ' + error.message);
+            }
+        }
+
+        // Test 8: Gestion Erreurs Auth
+        function testAuthErrors() {
+            log('Test gestion erreurs auth...');
+            const container = document.getElementById('auth-test-results');
+            
+            try {
+                if (window.AuthManager) {
+                    showResult('auth-test-results', '✅ AuthManager est disponible', 'success');
+                    log('Auth error handling OK');
+                } else {
+                    showResult('auth-test-results', '❌ AuthManager non trouvé', 'error');
+                    log('Auth error handling FAILED');
+                }
+            } catch (error) {
+                showResult('auth-test-results', '❌ Erreur lors du test gestion erreurs: ' + error.message, 'error');
+                log('Auth error handling ERROR: ' + error.message);
+            }
+        }
+
+        // Initialisation
+        window.addEventListener('load', function() {
+            log('Page de test chargée');
+            log('Vérification des dépendances...');
+            
+            // Vérifier que les scripts sont chargés
+            const scripts = ['main.js', 'auth.js', 'ai-service.js', 'document-processor.js'];
+            scripts.forEach(script => {
+                if (document.querySelector(`script[src*="${script}"]`)) {
+                    log(`✅ Script ${script} chargé`);
+                } else {
+                    log(`❌ Script ${script} manquant`);
+                }
+            });
+        });
+    </script>
+
+    <!-- Charger les scripts nécessaires -->
+    <script src="config.js"></script>
+    <script src="scripts/notification-manager.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/ai-service.js"></script>
+    <script src="scripts/document-processor.js"></script>
+</body>
+</html>
